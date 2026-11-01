@@ -1,0 +1,22 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "cesar@cachyos.local",
+                "Name": "Cesar"
+            }
+        ],
+        "BugReportUrl": "https://github.com/cesarconte/kfocus/issues",
+        "Category": "Utilities",
+        "Description": "Modos de Concentración al estilo macOS Control Center (Trabajo, Personal, Lectura, Descanso, No Molestar y Pomodoro) con estética Liquid Glass para KDE Plasma 6",
+        "EnabledByDefault": true,
+        "Icon": "weather-clear-night",
+        "Id": "org.cesar.kfocus",
+        "License": "GPL-3.0-or-later",
+        "Name": "KFocus",
+        "Version": "0.1.0",
+        "Website": "https://github.com/cesarconte/kfocus"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
