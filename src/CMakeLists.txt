@@ -20,7 +20,6 @@ plasma_add_applet(org.cesar.kfocus
         focusapplet.h
     QML_SOURCES
         qml/main.qml
-        qml/LiquidGlassCard.qml
     RESOURCES
         res/main.xml
 )

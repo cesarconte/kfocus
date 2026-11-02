@@ -41,14 +41,19 @@ PlasmoidItem {
             NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
         }
 
-        LiquidGlassCard {
+        Rectangle {
             id: compactPill
             anchors.centerIn: parent
             width: Math.max(28, parent.width - 4)
             height: Math.max(20, Math.min(parent.height - 2, Kirigami.Units.gridUnit * 1.75))
             radius: height / 2
-            glassStyle: "shell"
-            isHighlighted: root.hasActiveMode || Plasmoid.dndActive
+            color: (root.hasActiveMode || Plasmoid.dndActive)
+                ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                : "transparent"
+            border.width: 1
+            border.color: (root.hasActiveMode || Plasmoid.dndActive)
+                ? Kirigami.Theme.highlightColor
+                : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
             RowLayout {
                 id: compactPillRow
@@ -113,12 +118,9 @@ PlasmoidItem {
         Layout.preferredWidth: Kirigami.Units.gridUnit * 21
         Layout.preferredHeight: Kirigami.Units.gridUnit * 23
 
-        LiquidGlassCard {
+        Item {
             anchors.fill: parent
             anchors.margins: Kirigami.Units.smallSpacing
-            glassStyle: "shell"
-            glassOpacity: 0.90
-            isHighlighted: root.hasActiveMode
 
             ColumnLayout {
                 anchors.fill: parent
@@ -126,12 +128,18 @@ PlasmoidItem {
                 spacing: Kirigami.Units.mediumSpacing
 
                 // 1. Header Card: Active Focus Status + Countdown + Quick Duration Pills
-                LiquidGlassCard {
+                Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: headerCol.implicitHeight + Kirigami.Units.largeSpacing * 1.6
                     Layout.preferredHeight: implicitHeight
-                    glassStyle: "card"
-                    isHighlighted: root.hasActiveMode
+                    radius: Kirigami.Units.smallSpacing
+                    color: root.hasActiveMode
+                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                        : Kirigami.Theme.alternateBackgroundColor
+                    border.width: 1
+                    border.color: root.hasActiveMode
+                        ? Kirigami.Theme.highlightColor
+                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
                     ColumnLayout {
                         id: headerCol
@@ -143,37 +151,25 @@ PlasmoidItem {
                             Layout.fillWidth: true
                             spacing: Kirigami.Units.mediumSpacing
 
-                            Rectangle {
-                                Layout.preferredWidth: Kirigami.Units.gridUnit * 2.2
-                                Layout.preferredHeight: Kirigami.Units.gridUnit * 2.2
-                                radius: width / 2
-                                color: root.hasActiveMode
-                                    ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.22)
-                                    : Kirigami.Theme.alternateBackgroundColor
-                                border.width: 1
-                                border.color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.18)
-
-                                Kirigami.Icon {
-                                    anchors.centerIn: parent
-                                    width: Kirigami.Units.iconSizes.smallMedium
-                                    height: Kirigami.Units.iconSizes.smallMedium
-                                    source: root.hasActiveMode
-                                        ? Plasmoid.activeModeIcon
-                                        : (Plasmoid.dndActive ? "notifications-disabled" : "weather-clear-night")
-                                    color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
-                                }
+                            Kirigami.Icon {
+                                Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                                Layout.preferredHeight: Kirigami.Units.iconSizes.medium
+                                source: root.hasActiveMode
+                                    ? Plasmoid.activeModeIcon
+                                    : (Plasmoid.dndActive ? "notifications-disabled" : "preferences-system-time")
+                                color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                             }
 
                             ColumnLayout {
                                 Layout.fillWidth: true
-                                spacing: 2
+                                spacing: 1
 
                                 QQC2.Label {
                                     Layout.fillWidth: true
                                     text: root.hasActiveMode
-                                        ? ("Concentración: " + Plasmoid.activeModeName)
-                                        : "Concentración inactiva"
-                                    font.pixelSize: Kirigami.Units.gridUnit * 0.82
+                                        ? ("Modo " + Plasmoid.activeModeName + " activo")
+                                        : (Plasmoid.dndActive ? "No Molestar activo" : "Modos de Concentración")
+                                    font.pixelSize: Kirigami.Units.gridUnit * 0.8
                                     font.bold: true
                                     color: Kirigami.Theme.textColor
                                     elide: Text.ElideRight
@@ -182,20 +178,21 @@ PlasmoidItem {
                                 QQC2.Label {
                                     Layout.fillWidth: true
                                     text: root.hasActiveTimer
-                                        ? ("Temporizador activo · " + Plasmoid.remainingFormatted)
-                                        : (root.hasActiveMode
-                                            ? "Sin límite de tiempo (∞)"
-                                            : "Selecciona un perfil o inicia un Pomodoro")
-                                    font.pixelSize: Kirigami.Units.gridUnit * 0.66
+                                        ? ("Finaliza en " + Plasmoid.remainingFormatted)
+                                        : (root.hasActiveMode ? "Sin temporizador límite" : "Silencia notificaciones y personaliza tu entorno")
+                                    font.pixelSize: Kirigami.Units.gridUnit * 0.62
                                     color: root.hasActiveTimer ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
                                     elide: Text.ElideRight
                                 }
                             }
 
                             // Large live timer badge when active
-                            LiquidGlassCard {
+                            Rectangle {
                                 visible: root.hasActiveTimer
-                                glassStyle: "recessed"
+                                radius: Kirigami.Units.smallSpacing
+                                color: Kirigami.Theme.backgroundColor
+                                border.width: 1
+                                border.color: Kirigami.Theme.highlightColor
                                 implicitWidth: timerBadgeRow.implicitWidth + Kirigami.Units.mediumSpacing * 1.6
                                 implicitHeight: Kirigami.Units.gridUnit * 1.55
                                 Layout.preferredWidth: implicitWidth
@@ -238,28 +235,35 @@ PlasmoidItem {
                                     { label: "∞", minutes: 0 }
                                 ]
 
-                                delegate: LiquidGlassCard {
+                                delegate: Rectangle {
                                     id: pillCard
                                     required property var modelData
                                     Layout.fillWidth: true
                                     implicitHeight: Kirigami.Units.gridUnit * 1.45
                                     Layout.preferredHeight: implicitHeight
-                                    glassStyle: "recessed"
+                                    radius: Kirigami.Units.smallSpacing
                                     readonly property bool isSelectedDuration: {
                                         if (!root.hasActiveMode) {
                                             return false;
                                         }
                                         if (pillCard.modelData.minutes === 0) {
-                                            return Plasmoid.remainingSeconds === 0;
+                                            return !root.hasActiveTimer;
                                         }
-                                        return Math.abs(Plasmoid.remainingSeconds - pillCard.modelData.minutes * 60) <= 59;
+                                        const minsLeft = Math.ceil(Plasmoid.remainingSeconds / 60);
+                                        return Math.abs(minsLeft - pillCard.modelData.minutes) <= 1;
                                     }
-                                    isHighlighted: isSelectedDuration
+                                    color: pillCard.isSelectedDuration
+                                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                                        : Kirigami.Theme.backgroundColor
+                                    border.width: 1
+                                    border.color: pillCard.isSelectedDuration
+                                        ? Kirigami.Theme.highlightColor
+                                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
                                     QQC2.Label {
                                         anchors.centerIn: parent
                                         text: pillCard.modelData.label
-                                        font.pixelSize: Kirigami.Units.gridUnit * 0.66
+                                        font.pixelSize: Kirigami.Units.gridUnit * 0.62
                                         font.bold: pillCard.isSelectedDuration
                                         color: pillCard.isSelectedDuration ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                     }
@@ -268,7 +272,11 @@ PlasmoidItem {
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
-                                            Plasmoid.startCustomTimer(pillCard.modelData.minutes);
+                                            if (!root.hasActiveMode) {
+                                                Plasmoid.activateMode("work", pillCard.modelData.minutes);
+                                            } else {
+                                                Plasmoid.startCustomTimer(pillCard.modelData.minutes);
+                                            }
                                         }
                                     }
                                 }
@@ -277,7 +285,7 @@ PlasmoidItem {
                     }
                 }
 
-                // 2. 2x2 Grid of Liquid Glass Focus Mode Cards (Trabajo, Personal, Lectura, Descanso)
+                // 2. 2x2 Grid of Focus Mode Cards (Trabajo, Personal, Lectura, Descanso)
                 GridLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
@@ -288,7 +296,7 @@ PlasmoidItem {
                     Repeater {
                         model: Plasmoid.modes
 
-                        delegate: LiquidGlassCard {
+                        delegate: Rectangle {
                             id: modeCard
                             required property var modelData
 
@@ -303,72 +311,48 @@ PlasmoidItem {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             Layout.minimumHeight: Kirigami.Units.gridUnit * 5.2
-                            glassStyle: "card"
-                            isHighlighted: isCurrent
+                            radius: Kirigami.Units.smallSpacing
+                            color: modeCard.isCurrent
+                                ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                                : Kirigami.Theme.alternateBackgroundColor
+                            border.width: 1
+                            border.color: modeCard.isCurrent
+                                ? Kirigami.Theme.highlightColor
+                                : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
                             ColumnLayout {
                                 anchors.fill: parent
-                                anchors.margins: Kirigami.Units.mediumSpacing * 1.1
+                                anchors.margins: Kirigami.Units.mediumSpacing
                                 spacing: Kirigami.Units.smallSpacing
 
                                 RowLayout {
                                     Layout.fillWidth: true
                                     spacing: Kirigami.Units.smallSpacing
 
-                                    Rectangle {
-                                        Layout.preferredWidth: Kirigami.Units.gridUnit * 1.85
-                                        Layout.preferredHeight: Kirigami.Units.gridUnit * 1.85
-                                        radius: width / 2
-                                        color: modeCard.isCurrent
-                                            ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.22)
-                                            : Kirigami.Theme.alternateBackgroundColor
-                                        border.width: 1
-                                        border.color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.16)
-
-                                        Kirigami.Icon {
-                                            anchors.centerIn: parent
-                                            width: Kirigami.Units.iconSizes.small
-                                            height: Kirigami.Units.iconSizes.small
-                                            source: modeCard.modeIcon
-                                            color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
-                                        }
+                                    Kirigami.Icon {
+                                        Layout.preferredWidth: Kirigami.Units.iconSizes.medium
+                                        Layout.preferredHeight: Kirigami.Units.iconSizes.medium
+                                        source: modeCard.modeIcon
+                                        color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                     }
 
                                     Item { Layout.fillWidth: true }
 
-                                    // Default timer or color scheme badge
+                                    // Active indicator dot
                                     Rectangle {
-                                        visible: modeCard.defaultMins > 0 || modeCard.schemeName.length > 0
-                                        implicitWidth: badgeText.implicitWidth + Kirigami.Units.smallSpacing * 1.8
-                                        implicitHeight: Kirigami.Units.gridUnit * 1.05
-                                        Layout.preferredWidth: implicitWidth
-                                        Layout.preferredHeight: implicitHeight
-                                        radius: height / 2
-                                        color: modeCard.isCurrent
-                                            ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.18)
-                                            : Kirigami.Theme.alternateBackgroundColor
+                                        width: 8
+                                        height: 8
+                                        radius: 4
+                                        color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : "transparent"
                                         border.width: 1
-                                        border.color: modeCard.isCurrent
-                                            ? Kirigami.Theme.highlightColor
-                                            : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
-
-                                        QQC2.Label {
-                                            id: badgeText
-                                            anchors.centerIn: parent
-                                            text: modeCard.defaultMins > 0
-                                                ? (modeCard.defaultMins + " min")
-                                                : "Oscuro"
-                                            font.pixelSize: Kirigami.Units.gridUnit * 0.56
-                                            font.bold: true
-                                            color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
-                                        }
+                                        border.color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
                                     }
                                 }
 
                                 QQC2.Label {
                                     Layout.fillWidth: true
                                     text: modeCard.modeName
-                                    font.pixelSize: Kirigami.Units.gridUnit * 0.78
+                                    font.pixelSize: Kirigami.Units.gridUnit * 0.76
                                     font.bold: true
                                     color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                     elide: Text.ElideRight
@@ -378,11 +362,32 @@ PlasmoidItem {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
                                     text: modeCard.modeSubtitle
-                                    font.pixelSize: Kirigami.Units.gridUnit * 0.60
-                                    color: modeCard.isCurrent ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor
+                                    font.pixelSize: Kirigami.Units.gridUnit * 0.58
+                                    color: Kirigami.Theme.disabledTextColor
                                     wrapMode: Text.WordWrap
-                                    maximumLineCount: 2
                                     elide: Text.ElideRight
+                                    maximumLineCount: 2
+                                }
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: Kirigami.Units.smallSpacing
+
+                                    QQC2.Label {
+                                        text: modeCard.defaultMins > 0 ? (modeCard.defaultMins + " min") : "Manual"
+                                        font.pixelSize: Kirigami.Units.gridUnit * 0.54
+                                        color: Kirigami.Theme.disabledTextColor
+                                    }
+
+                                    Item { Layout.fillWidth: true }
+
+                                    QQC2.Label {
+                                        visible: modeCard.isCurrent
+                                        text: "Activo"
+                                        font.pixelSize: Kirigami.Units.gridUnit * 0.54
+                                        font.bold: true
+                                        color: Kirigami.Theme.highlightColor
+                                    }
                                 }
                             }
 
@@ -398,12 +403,18 @@ PlasmoidItem {
                 }
 
                 // 3. Footer Controls: Quick Toggle for "No Molestar (DND)" & "Desactivar Concentración"
-                LiquidGlassCard {
+                Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: footerCol.implicitHeight + Kirigami.Units.mediumSpacing * 1.6
                     Layout.preferredHeight: implicitHeight
-                    glassStyle: "card"
-                    isHighlighted: Plasmoid.dndActive && !root.hasActiveMode
+                    radius: Kirigami.Units.smallSpacing
+                    color: (Plasmoid.dndActive && !root.hasActiveMode)
+                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                        : Kirigami.Theme.alternateBackgroundColor
+                    border.width: 1
+                    border.color: (Plasmoid.dndActive && !root.hasActiveMode)
+                        ? Kirigami.Theme.highlightColor
+                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
                     ColumnLayout {
                         id: footerCol
@@ -456,13 +467,15 @@ PlasmoidItem {
                         }
 
                         // "Desactivar Concentración" button when a mode is active
-                        LiquidGlassCard {
+                        Rectangle {
                             visible: root.hasActiveMode
                             Layout.fillWidth: true
                             implicitHeight: Kirigami.Units.gridUnit * 1.85
                             Layout.preferredHeight: implicitHeight
-                            glassStyle: "recessed"
-                            isHighlighted: true
+                            radius: Kirigami.Units.smallSpacing
+                            color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                            border.width: 1
+                            border.color: Kirigami.Theme.highlightColor
 
                             RowLayout {
                                 anchors.centerIn: parent

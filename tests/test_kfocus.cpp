@@ -182,15 +182,9 @@ private Q_SLOTS:
         QCOMPARE(personal.value(QStringLiteral("colorScheme")).toString(), QStringLiteral("BreezeLight"));
     }
 
-    void testLiquidGlassAndMainQmlCompileCleanly()
+    void testMainQmlCompilesCleanly()
     {
         QQmlEngine engine;
-
-        const QString glassPath = QStringLiteral(KFOCUS_SOURCE_DIR) + QStringLiteral("/src/qml/LiquidGlassCard.qml");
-        QVERIFY(QFile::exists(glassPath));
-        QQmlComponent glassComp(&engine, QUrl::fromLocalFile(glassPath));
-        QVERIFY2(!glassComp.isError(), qPrintable(glassComp.errorString()));
-
         const QString mainPath = QStringLiteral(KFOCUS_SOURCE_DIR) + QStringLiteral("/src/qml/main.qml");
         QVERIFY(QFile::exists(mainPath));
         QQmlComponent mainComp(&engine, QUrl::fromLocalFile(mainPath));

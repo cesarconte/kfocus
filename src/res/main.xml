@@ -5,9 +5,9 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <kcfgfile name=""/>
   <group name="General">
-    <entry name="liquidGlassEnabled" type="Bool">
-      <label>Enable Liquid Glass aesthetics on the KFocus popup and cards</label>
-      <default>true</default>
+    <entry name="autoStart" type="Bool">
+      <label>Iniciar automáticamente</label>
+      <default>false</default>
     </entry>
   </group>
 </kcfg>
