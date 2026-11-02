@@ -62,7 +62,7 @@ PlasmoidItem {
                     source: root.hasActiveMode
                         ? Plasmoid.activeModeIcon
                         : (Plasmoid.dndActive ? "notifications-disabled" : "weather-clear-night")
-                    color: (root.hasActiveMode || Plasmoid.dndActive) ? "#00e5ff" : "#e2e8f0"
+                    color: (root.hasActiveMode || Plasmoid.dndActive) ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                 }
 
                 PlasmaComponents3.Label {
@@ -71,7 +71,7 @@ PlasmoidItem {
                     text: root.hasActiveMode ? Plasmoid.activeModeName : "No Molestar"
                     font.pixelSize: Kirigami.Units.gridUnit * 0.68
                     font.bold: true
-                    color: "#f8fafc"
+                    color: Kirigami.Theme.textColor
                 }
 
                 PlasmaComponents3.Label {
@@ -80,7 +80,7 @@ PlasmoidItem {
                     text: "· " + Plasmoid.remainingFormatted
                     font.pixelSize: Kirigami.Units.gridUnit * 0.64
                     font.family: "monospace"
-                    color: "#00e5ff"
+                    color: Kirigami.Theme.highlightColor
                 }
             }
 
@@ -148,10 +148,10 @@ PlasmoidItem {
                                 Layout.preferredHeight: Kirigami.Units.gridUnit * 2.2
                                 radius: width / 2
                                 color: root.hasActiveMode
-                                    ? Qt.rgba(0.0, 0.90, 1.0, 0.22)
-                                    : Qt.rgba(1.0, 1.0, 1.0, 0.08)
+                                    ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.22)
+                                    : Kirigami.Theme.alternateBackgroundColor
                                 border.width: 1
-                                border.color: root.hasActiveMode ? "#00e5ff" : Qt.rgba(1.0, 1.0, 1.0, 0.18)
+                                border.color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.18)
 
                                 Kirigami.Icon {
                                     anchors.centerIn: parent
@@ -160,7 +160,7 @@ PlasmoidItem {
                                     source: root.hasActiveMode
                                         ? Plasmoid.activeModeIcon
                                         : (Plasmoid.dndActive ? "notifications-disabled" : "weather-clear-night")
-                                    color: root.hasActiveMode ? "#00e5ff" : "#e2e8f0"
+                                    color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                 }
                             }
 
@@ -175,7 +175,7 @@ PlasmoidItem {
                                         : "Concentración inactiva"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.82
                                     font.bold: true
-                                    color: "#f8fafc"
+                                    color: Kirigami.Theme.textColor
                                     elide: Text.ElideRight
                                 }
 
@@ -187,7 +187,7 @@ PlasmoidItem {
                                             ? "Sin límite de tiempo (∞)"
                                             : "Selecciona un perfil o inicia un Pomodoro")
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.66
-                                    color: root.hasActiveTimer ? "#00e5ff" : "#94a3b8"
+                                    color: root.hasActiveTimer ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
                                     elide: Text.ElideRight
                                 }
                             }
@@ -210,7 +210,7 @@ PlasmoidItem {
                                         Layout.preferredWidth: 14
                                         Layout.preferredHeight: 14
                                         source: "chronometer"
-                                        color: "#00e5ff"
+                                        color: Kirigami.Theme.highlightColor
                                     }
 
                                     QQC2.Label {
@@ -218,7 +218,7 @@ PlasmoidItem {
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.72
                                         font.bold: true
                                         font.family: "monospace"
-                                        color: "#00e5ff"
+                                        color: Kirigami.Theme.highlightColor
                                     }
                                 }
                             }
@@ -261,7 +261,7 @@ PlasmoidItem {
                                         text: pillCard.modelData.label
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.66
                                         font.bold: pillCard.isSelectedDuration
-                                        color: pillCard.isSelectedDuration ? "#00e5ff" : "#e2e8f0"
+                                        color: pillCard.isSelectedDuration ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                     }
 
                                     MouseArea {
@@ -320,17 +320,17 @@ PlasmoidItem {
                                         Layout.preferredHeight: Kirigami.Units.gridUnit * 1.85
                                         radius: width / 2
                                         color: modeCard.isCurrent
-                                            ? Qt.rgba(0.0, 0.90, 1.0, 0.26)
-                                            : Qt.rgba(1.0, 1.0, 1.0, 0.08)
+                                            ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.22)
+                                            : Kirigami.Theme.alternateBackgroundColor
                                         border.width: 1
-                                        border.color: modeCard.isCurrent ? "#00e5ff" : Qt.rgba(1.0, 1.0, 1.0, 0.16)
+                                        border.color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.16)
 
                                         Kirigami.Icon {
                                             anchors.centerIn: parent
                                             width: Kirigami.Units.iconSizes.small
                                             height: Kirigami.Units.iconSizes.small
                                             source: modeCard.modeIcon
-                                            color: modeCard.isCurrent ? "#00e5ff" : "#e2e8f0"
+                                            color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                         }
                                     }
 
@@ -345,12 +345,12 @@ PlasmoidItem {
                                         Layout.preferredHeight: implicitHeight
                                         radius: height / 2
                                         color: modeCard.isCurrent
-                                            ? Qt.rgba(0.0, 0.90, 1.0, 0.22)
-                                            : Qt.rgba(0.0, 0.0, 0.0, 0.32)
+                                            ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.18)
+                                            : Kirigami.Theme.alternateBackgroundColor
                                         border.width: 1
                                         border.color: modeCard.isCurrent
-                                            ? "#00e5ff"
-                                            : Qt.rgba(1.0, 1.0, 1.0, 0.14)
+                                            ? Kirigami.Theme.highlightColor
+                                            : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
 
                                         QQC2.Label {
                                             id: badgeText
@@ -360,7 +360,7 @@ PlasmoidItem {
                                                 : "Oscuro"
                                             font.pixelSize: Kirigami.Units.gridUnit * 0.56
                                             font.bold: true
-                                            color: modeCard.isCurrent ? "#00e5ff" : "#cbd5e1"
+                                            color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
                                         }
                                     }
                                 }
@@ -370,7 +370,7 @@ PlasmoidItem {
                                     text: modeCard.modeName
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.78
                                     font.bold: true
-                                    color: modeCard.isCurrent ? "#00e5ff" : "#f8fafc"
+                                    color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
                                     elide: Text.ElideRight
                                 }
 
@@ -379,7 +379,7 @@ PlasmoidItem {
                                     Layout.fillHeight: true
                                     text: modeCard.modeSubtitle
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.60
-                                    color: modeCard.isCurrent ? "#e2e8f0" : "#94a3b8"
+                                    color: modeCard.isCurrent ? Kirigami.Theme.textColor : Kirigami.Theme.disabledTextColor
                                     wrapMode: Text.WordWrap
                                     maximumLineCount: 2
                                     elide: Text.ElideRight
@@ -421,7 +421,7 @@ PlasmoidItem {
                                 source: Plasmoid.dndActive
                                     ? "notifications-disabled"
                                     : "preferences-desktop-notification-bell"
-                                color: Plasmoid.dndActive ? "#00e5ff" : "#cbd5e1"
+                                color: Plasmoid.dndActive ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
                             }
 
                             ColumnLayout {
@@ -433,7 +433,7 @@ PlasmoidItem {
                                     text: "No Molestar (DND)"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.72
                                     font.bold: true
-                                    color: "#f8fafc"
+                                    color: Kirigami.Theme.textColor
                                 }
 
                                 QQC2.Label {
@@ -442,7 +442,7 @@ PlasmoidItem {
                                         ? "Notificaciones emergentes silenciadas"
                                         : "Notificaciones del sistema permitidas"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.58
-                                    color: "#94a3b8"
+                                    color: Kirigami.Theme.disabledTextColor
                                     elide: Text.ElideRight
                                 }
                             }
@@ -472,14 +472,14 @@ PlasmoidItem {
                                     Layout.preferredWidth: Kirigami.Units.iconSizes.small
                                     Layout.preferredHeight: Kirigami.Units.iconSizes.small
                                     source: "dialog-cancel"
-                                    color: "#00e5ff"
+                                    color: Kirigami.Theme.highlightColor
                                 }
 
                                 QQC2.Label {
                                     text: "Desactivar Concentración"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.68
                                     font.bold: true
-                                    color: "#00e5ff"
+                                    color: Kirigami.Theme.highlightColor
                                 }
                             }
 
