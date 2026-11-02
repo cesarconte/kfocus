@@ -18,7 +18,7 @@ PlasmoidItem {
     id: root
 
     preferredRepresentation: compactRepresentation
-    Plasmoid.backgroundHints: PlasmaCore.Types.TranslucentBackground
+    Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground
 
     readonly property bool hasActiveMode: Plasmoid.activeModeId.length > 0
     readonly property bool hasActiveTimer: Plasmoid.remainingSeconds > 0
