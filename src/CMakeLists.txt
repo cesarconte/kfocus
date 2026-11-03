@@ -22,7 +22,12 @@ plasma_add_applet(org.cesar.kfocus
         qml/main.qml
     RESOURCES
         res/main.xml
+        res/focus-symbolic.svg
 )
+
+install(FILES res/focus-symbolic.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/apps)
+install(FILES res/focus-symbolic.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/status)
+install(FILES res/focus-symbolic.svg DESTINATION ${KDE_INSTALL_ICONDIR}/hicolor/scalable/actions)
 
 target_include_directories(org.cesar.kfocus PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 

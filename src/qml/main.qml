@@ -33,7 +33,11 @@ PlasmoidItem {
     compactRepresentation: Item {
         id: compactRoot
 
-        Layout.minimumWidth: compactPillRow.implicitWidth + Kirigami.Units.largeSpacing * 2.2
+        readonly property bool showText: root.hasActiveMode || Plasmoid.dndActive
+
+        Layout.minimumWidth: showText
+            ? (compactContentRow.implicitWidth + Kirigami.Units.smallSpacing * 2)
+            : (compactRoot.height > 0 ? compactRoot.height : Kirigami.Units.gridUnit * 1.8)
         Layout.preferredWidth: Layout.minimumWidth
         Layout.fillHeight: true
 
@@ -41,69 +45,55 @@ PlasmoidItem {
             NumberAnimation { duration: 200; easing.type: Easing.OutCubic }
         }
 
-        Rectangle {
-            id: compactPill
-            anchors.centerIn: parent
-            width: Math.max(28, parent.width - 4)
-            height: Math.max(20, Math.min(parent.height - 2, Kirigami.Units.gridUnit * 1.75))
-            radius: height / 2
-            color: (root.hasActiveMode || Plasmoid.dndActive)
-                ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
-                : "transparent"
-            border.width: 1
-            border.color: (root.hasActiveMode || Plasmoid.dndActive)
-                ? Kirigami.Theme.highlightColor
-                : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
-
-            RowLayout {
-                id: compactPillRow
-                anchors.centerIn: parent
-                spacing: Kirigami.Units.smallSpacing * 1.2
-
-                Kirigami.Icon {
-                    Layout.preferredWidth: Kirigami.Units.iconSizes.small
-                    Layout.preferredHeight: Kirigami.Units.iconSizes.small
-                    Layout.alignment: Qt.AlignVCenter
-                    source: root.hasActiveMode
-                        ? Plasmoid.activeModeIcon
-                        : (Plasmoid.dndActive ? "notifications-disabled" : "weather-clear-night")
-                    color: (root.hasActiveMode || Plasmoid.dndActive) ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
-                }
-
-                PlasmaComponents3.Label {
-                    visible: root.hasActiveMode || Plasmoid.dndActive
-                    Layout.alignment: Qt.AlignVCenter
-                    text: root.hasActiveMode ? Plasmoid.activeModeName : "No Molestar"
-                    font.pixelSize: Kirigami.Units.gridUnit * 0.68
-                    font.bold: true
-                    color: Kirigami.Theme.textColor
-                }
-
-                PlasmaComponents3.Label {
-                    visible: root.hasActiveTimer
-                    Layout.alignment: Qt.AlignVCenter
-                    text: "· " + Plasmoid.remainingFormatted
-                    font.pixelSize: Kirigami.Units.gridUnit * 0.64
-                    font.family: "monospace"
-                    color: Kirigami.Theme.highlightColor
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+            onClicked: (mouse) => {
+                if (mouse.button === Qt.MiddleButton) {
+                    if (root.hasActiveMode) {
+                        Plasmoid.deactivateMode();
+                    } else {
+                        Plasmoid.toggleDnd();
+                    }
+                } else {
+                    root.expanded = !root.expanded;
                 }
             }
+        }
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-                onClicked: (mouse) => {
-                    if (mouse.button === Qt.MiddleButton) {
-                        if (root.hasActiveMode) {
-                            Plasmoid.deactivateMode();
-                        } else {
-                            Plasmoid.toggleDnd();
-                        }
-                    } else {
-                        root.expanded = !root.expanded;
-                    }
-                }
+        RowLayout {
+            id: compactContentRow
+            anchors.centerIn: parent
+            spacing: Kirigami.Units.smallSpacing * 1.2
+
+            Kirigami.Icon {
+                Layout.preferredWidth: Kirigami.Units.iconSizes.small
+                Layout.preferredHeight: Kirigami.Units.iconSizes.small
+                Layout.alignment: Qt.AlignVCenter
+                source: (root.hasActiveMode && Plasmoid.activeModeIcon.length > 0)
+                    ? (Plasmoid.activeModeIcon.endsWith("-symbolic") ? Plasmoid.activeModeIcon : (Plasmoid.activeModeIcon + "-symbolic"))
+                    : "focus-symbolic"
+                fallback: Qt.resolvedUrl("focus-symbolic.svg")
+                isMask: true
+            }
+
+            PlasmaComponents3.Label {
+                visible: compactRoot.showText
+                Layout.alignment: Qt.AlignVCenter
+                text: root.hasActiveMode ? Plasmoid.activeModeName : "No Molestar"
+                font.pixelSize: Kirigami.Units.gridUnit * 0.68
+                font.bold: true
+                color: Kirigami.Theme.textColor
+            }
+
+            PlasmaComponents3.Label {
+                visible: root.hasActiveTimer
+                Layout.alignment: Qt.AlignVCenter
+                text: "· " + Plasmoid.remainingFormatted
+                font.pixelSize: Kirigami.Units.gridUnit * 0.64
+                font.family: "monospace"
+                color: Kirigami.Theme.highlightColor
             }
         }
     }
