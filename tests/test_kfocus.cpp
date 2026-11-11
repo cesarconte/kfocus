@@ -185,10 +185,16 @@ private Q_SLOTS:
     void testMainQmlCompilesCleanly()
     {
         QQmlEngine engine;
+        engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
         const QString mainPath = QStringLiteral(KFOCUS_SOURCE_DIR) + QStringLiteral("/src/qml/main.qml");
         QVERIFY(QFile::exists(mainPath));
         QQmlComponent mainComp(&engine, QUrl::fromLocalFile(mainPath));
         QVERIFY2(!mainComp.isError(), qPrintable(mainComp.errorString()));
+
+        const QString winPath = QStringLiteral(KFOCUS_SOURCE_DIR) + QStringLiteral("/src/qml/FocusWindow.qml");
+        QVERIFY(QFile::exists(winPath));
+        QQmlComponent winComp(&engine, QUrl::fromLocalFile(winPath));
+        QVERIFY2(!winComp.isError(), qPrintable(winComp.errorString()));
     }
 
     void testRealSystemValidation()

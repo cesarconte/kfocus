@@ -44,3 +44,18 @@ target_link_libraries(org.cesar.kfocus PRIVATE
     Plasma::Plasma
     Plasma::PlasmaQuick
 )
+
+add_executable(kfocus
+    main_app.cpp
+    app_resources.qrc
+)
+target_link_libraries(kfocus PRIVATE
+    kfocus_core
+    Qt6::Core
+    Qt6::DBus
+    Qt6::Gui
+    Qt6::Qml
+    Qt6::Quick
+)
+install(TARGETS kfocus ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES org.cesar.kfocus.desktop DESTINATION ${KDE_INSTALL_APPDIR})

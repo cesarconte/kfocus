@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/org/cesar/kfocus">
+        <file>qml/FocusWindow.qml</file>
+    </qresource>
+</RCC>

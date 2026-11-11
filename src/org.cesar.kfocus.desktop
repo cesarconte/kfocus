@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=KFocus — Modos de Concentración
+GenericName=Modos de Concentración (Focus)
+Comment=Gestor de modos de concentración y Pomodoro estilo macOS Golden Gate para KDE Plasma 6
+Exec=kfocus
+Icon=preferences-system-time
+Type=Application
+Categories=Utility;KDE;Qt;
+StartupNotify=true
