@@ -10,6 +10,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 import org.kde.kirigami as Kirigami
+import CachyOS.UI
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.plasmoid
@@ -22,6 +23,13 @@ PlasmoidItem {
 
     readonly property bool hasActiveMode: Plasmoid.activeModeId.length > 0
     readonly property bool hasActiveTimer: Plasmoid.remainingSeconds > 0
+
+    // Paleta del plasmoide (regla Golden Gate): el color lo aporta
+    // CachyPalette (paleta efectiva de la superficie real). La geometría
+    // y el acento salen de CachyTheme, idénticos a los de una aplicación.
+    readonly property color foreground: CachyPalette.text
+    readonly property color dim: CachyPalette.textSecondary
+    readonly property color accent: CachyPalette.accentText
 
     toolTipMainText: root.hasActiveMode
         ? ("Concentración: " + Plasmoid.activeModeName)
@@ -36,7 +44,7 @@ PlasmoidItem {
         readonly property bool showText: root.hasActiveMode || Plasmoid.dndActive
 
         Layout.minimumWidth: showText
-            ? (compactContentRow.implicitWidth + Kirigami.Units.smallSpacing * 2)
+            ? (compactContentRow.implicitWidth + CachyTheme.spacingSmall * 2)
             : (compactRoot.height > 0 ? compactRoot.height : Kirigami.Units.gridUnit * 1.8)
         Layout.preferredWidth: Layout.minimumWidth
         Layout.fillHeight: true
@@ -65,7 +73,7 @@ PlasmoidItem {
         RowLayout {
             id: compactContentRow
             anchors.centerIn: parent
-            spacing: Kirigami.Units.smallSpacing * 1.2
+            spacing: CachyTheme.spacingSmall * 1.2
 
             Kirigami.Icon {
                 Layout.preferredWidth: Kirigami.Units.iconSizes.small
@@ -84,7 +92,7 @@ PlasmoidItem {
                 text: root.hasActiveMode ? Plasmoid.activeModeName : "No Molestar"
                 font.pixelSize: Kirigami.Units.gridUnit * 0.68
                 font.bold: true
-                color: Kirigami.Theme.textColor
+                color: root.foreground
             }
 
             PlasmaComponents3.Label {
@@ -93,7 +101,7 @@ PlasmoidItem {
                 text: "· " + Plasmoid.remainingFormatted
                 font.pixelSize: Kirigami.Units.gridUnit * 0.64
                 font.family: "monospace"
-                color: Kirigami.Theme.highlightColor
+                color: root.accent
             }
         }
     }
@@ -102,44 +110,44 @@ PlasmoidItem {
         id: fullRoot
 
         implicitWidth: Kirigami.Units.gridUnit * 21
-        implicitHeight: Kirigami.Units.gridUnit * 23
+        implicitHeight: Kirigami.Units.gridUnit * 36
         Layout.minimumWidth: Kirigami.Units.gridUnit * 21
-        Layout.minimumHeight: Kirigami.Units.gridUnit * 23
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 36
         Layout.preferredWidth: Kirigami.Units.gridUnit * 21
-        Layout.preferredHeight: Kirigami.Units.gridUnit * 23
+        Layout.preferredHeight: Kirigami.Units.gridUnit * 36
 
         Item {
             anchors.fill: parent
-            anchors.margins: Kirigami.Units.smallSpacing
+            anchors.margins: CachyTheme.spacingSmall
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: Kirigami.Units.largeSpacing
-                spacing: Kirigami.Units.mediumSpacing
+                anchors.margins: CachyTheme.spacingLarge
+                spacing: CachyTheme.spacingMedium
 
                 // 1. Header Card: Active Focus Status + Countdown + Quick Duration Pills
                 Rectangle {
                     Layout.fillWidth: true
-                    implicitHeight: headerCol.implicitHeight + Kirigami.Units.largeSpacing * 1.6
+                    implicitHeight: headerCol.implicitHeight + CachyTheme.spacingLarge * 1.6
                     Layout.preferredHeight: implicitHeight
-                    radius: Kirigami.Units.smallSpacing
+                    radius: CachyTheme.spacingSmall
                     color: root.hasActiveMode
-                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
-                        : Kirigami.Theme.alternateBackgroundColor
+                        ? Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.16)
+                        : CachyPalette.cardBackground
                     border.width: 1
                     border.color: root.hasActiveMode
-                        ? Kirigami.Theme.highlightColor
-                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
+                        ? root.accent
+                        : CachyPalette.specularBorder
 
                     ColumnLayout {
                         id: headerCol
                         anchors.fill: parent
-                        anchors.margins: Kirigami.Units.mediumSpacing * 1.2
-                        spacing: Kirigami.Units.smallSpacing * 1.3
+                        anchors.margins: CachyTheme.spacingMedium * 1.2
+                        spacing: CachyTheme.spacingSmall * 1.3
 
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: Kirigami.Units.mediumSpacing
+                            spacing: CachyTheme.spacingMedium
 
                             Kirigami.Icon {
                                 Layout.preferredWidth: Kirigami.Units.iconSizes.medium
@@ -147,7 +155,7 @@ PlasmoidItem {
                                 source: root.hasActiveMode
                                     ? Plasmoid.activeModeIcon
                                     : (Plasmoid.dndActive ? "notifications-disabled" : "preferences-system-time")
-                                color: root.hasActiveMode ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                                color: root.hasActiveMode ? root.accent : root.foreground
                             }
 
                             ColumnLayout {
@@ -161,7 +169,7 @@ PlasmoidItem {
                                         : (Plasmoid.dndActive ? "No Molestar activo" : "Modos de Concentración")
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.8
                                     font.bold: true
-                                    color: Kirigami.Theme.textColor
+                                    color: root.foreground
                                     elide: Text.ElideRight
                                 }
 
@@ -171,7 +179,7 @@ PlasmoidItem {
                                         ? ("Finaliza en " + Plasmoid.remainingFormatted)
                                         : (root.hasActiveMode ? "Sin temporizador límite" : "Silencia notificaciones y personaliza tu entorno")
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.62
-                                    color: root.hasActiveTimer ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
+                                    color: root.hasActiveTimer ? root.accent : root.dim
                                     elide: Text.ElideRight
                                 }
                             }
@@ -179,11 +187,11 @@ PlasmoidItem {
                             // Large live timer badge when active
                             Rectangle {
                                 visible: root.hasActiveTimer
-                                radius: Kirigami.Units.smallSpacing
-                                color: Kirigami.Theme.backgroundColor
+                                radius: CachyTheme.spacingSmall
+                                color: CachyPalette.windowBackground
                                 border.width: 1
-                                border.color: Kirigami.Theme.highlightColor
-                                implicitWidth: timerBadgeRow.implicitWidth + Kirigami.Units.mediumSpacing * 1.6
+                                border.color: root.accent
+                                implicitWidth: timerBadgeRow.implicitWidth + CachyTheme.spacingMedium * 1.6
                                 implicitHeight: Kirigami.Units.gridUnit * 1.55
                                 Layout.preferredWidth: implicitWidth
                                 Layout.preferredHeight: implicitHeight
@@ -197,7 +205,8 @@ PlasmoidItem {
                                         Layout.preferredWidth: 14
                                         Layout.preferredHeight: 14
                                         source: "chronometer"
-                                        color: Kirigami.Theme.highlightColor
+                                        isMask: true
+                                        color: root.accent
                                     }
 
                                     QQC2.Label {
@@ -205,7 +214,7 @@ PlasmoidItem {
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.72
                                         font.bold: true
                                         font.family: "monospace"
-                                        color: Kirigami.Theme.highlightColor
+                                        color: root.accent
                                     }
                                 }
                             }
@@ -214,7 +223,7 @@ PlasmoidItem {
                         // Quick duration pills: 15m, 25m, 45m, 60m, ∞
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: Kirigami.Units.smallSpacing
+                            spacing: CachyTheme.spacingSmall
 
                             Repeater {
                                 model: [
@@ -231,7 +240,7 @@ PlasmoidItem {
                                     Layout.fillWidth: true
                                     implicitHeight: Kirigami.Units.gridUnit * 1.45
                                     Layout.preferredHeight: implicitHeight
-                                    radius: Kirigami.Units.smallSpacing
+                                    radius: CachyTheme.spacingSmall
                                     readonly property bool isSelectedDuration: {
                                         if (!root.hasActiveMode) {
                                             return false;
@@ -243,19 +252,19 @@ PlasmoidItem {
                                         return Math.abs(minsLeft - pillCard.modelData.minutes) <= 1;
                                     }
                                     color: pillCard.isSelectedDuration
-                                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
-                                        : Kirigami.Theme.backgroundColor
+                                        ? Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.16)
+                                        : CachyPalette.windowBackground
                                     border.width: 1
                                     border.color: pillCard.isSelectedDuration
-                                        ? Kirigami.Theme.highlightColor
-                                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
+                                        ? root.accent
+                                        : CachyPalette.specularBorder
 
                                     QQC2.Label {
                                         anchors.centerIn: parent
                                         text: pillCard.modelData.label
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.62
                                         font.bold: pillCard.isSelectedDuration
-                                        color: pillCard.isSelectedDuration ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                                        color: pillCard.isSelectedDuration ? root.accent : root.foreground
                                     }
 
                                     MouseArea {
@@ -280,8 +289,8 @@ PlasmoidItem {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     columns: 2
-                    rowSpacing: Kirigami.Units.mediumSpacing
-                    columnSpacing: Kirigami.Units.mediumSpacing
+                    rowSpacing: CachyTheme.spacingMedium
+                    columnSpacing: CachyTheme.spacingMedium
 
                     Repeater {
                         model: Plasmoid.modes
@@ -300,30 +309,31 @@ PlasmoidItem {
 
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            Layout.minimumHeight: Kirigami.Units.gridUnit * 5.2
-                            radius: Kirigami.Units.smallSpacing
+                            Layout.minimumHeight: Kirigami.Units.gridUnit * 8.5
+                            radius: CachyTheme.radiusSmall
                             color: modeCard.isCurrent
-                                ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
-                                : Kirigami.Theme.alternateBackgroundColor
+                                ? Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.16)
+                                : CachyPalette.cardBackground
                             border.width: 1
                             border.color: modeCard.isCurrent
-                                ? Kirigami.Theme.highlightColor
-                                : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
+                                ? root.accent
+                                : CachyPalette.specularBorder
 
                             ColumnLayout {
                                 anchors.fill: parent
-                                anchors.margins: Kirigami.Units.mediumSpacing
-                                spacing: Kirigami.Units.smallSpacing
+                                anchors.margins: CachyTheme.spacingMedium
+                                spacing: CachyTheme.spacingSmall
 
                                 RowLayout {
                                     Layout.fillWidth: true
-                                    spacing: Kirigami.Units.smallSpacing
+                                    spacing: CachyTheme.spacingSmall
 
                                     Kirigami.Icon {
                                         Layout.preferredWidth: Kirigami.Units.iconSizes.medium
                                         Layout.preferredHeight: Kirigami.Units.iconSizes.medium
                                         source: modeCard.modeIcon
-                                        color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                                        isMask: true
+                                        color: modeCard.isCurrent ? root.accent : root.foreground
                                     }
 
                                     Item { Layout.fillWidth: true }
@@ -333,9 +343,9 @@ PlasmoidItem {
                                         width: 8
                                         height: 8
                                         radius: 4
-                                        color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : "transparent"
+                                        color: modeCard.isCurrent ? root.accent : "transparent"
                                         border.width: 1
-                                        border.color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
+                                        border.color: modeCard.isCurrent ? root.accent : CachyPalette.specularBorder
                                     }
                                 }
 
@@ -344,16 +354,17 @@ PlasmoidItem {
                                     text: modeCard.modeName
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.76
                                     font.bold: true
-                                    color: modeCard.isCurrent ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
+                                    color: modeCard.isCurrent ? root.accent : root.foreground
                                     elide: Text.ElideRight
                                 }
 
                                 QQC2.Label {
                                     Layout.fillWidth: true
                                     Layout.fillHeight: true
+                                    Layout.minimumHeight: Kirigami.Units.gridUnit * 1.2
                                     text: modeCard.modeSubtitle
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.58
-                                    color: Kirigami.Theme.disabledTextColor
+                                    color: root.dim
                                     wrapMode: Text.WordWrap
                                     elide: Text.ElideRight
                                     maximumLineCount: 2
@@ -361,12 +372,13 @@ PlasmoidItem {
 
                                 RowLayout {
                                     Layout.fillWidth: true
-                                    spacing: Kirigami.Units.smallSpacing
+                                    Layout.minimumHeight: Kirigami.Units.gridUnit * 0.9
+                                    spacing: CachyTheme.spacingSmall
 
                                     QQC2.Label {
                                         text: modeCard.defaultMins > 0 ? (modeCard.defaultMins + " min") : "Manual"
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.54
-                                        color: Kirigami.Theme.disabledTextColor
+                                        color: root.dim
                                     }
 
                                     Item { Layout.fillWidth: true }
@@ -376,7 +388,7 @@ PlasmoidItem {
                                         text: "Activo"
                                         font.pixelSize: Kirigami.Units.gridUnit * 0.54
                                         font.bold: true
-                                        color: Kirigami.Theme.highlightColor
+                                        color: root.accent
                                     }
                                 }
                             }
@@ -395,26 +407,26 @@ PlasmoidItem {
                 // 3. Footer Controls: Quick Toggle for "No Molestar (DND)" & "Desactivar Concentración"
                 Rectangle {
                     Layout.fillWidth: true
-                    implicitHeight: footerCol.implicitHeight + Kirigami.Units.mediumSpacing * 1.6
+                    implicitHeight: footerCol.implicitHeight + CachyTheme.spacingMedium * 1.6
                     Layout.preferredHeight: implicitHeight
-                    radius: Kirigami.Units.smallSpacing
+                    radius: CachyTheme.spacingSmall
                     color: (Plasmoid.dndActive && !root.hasActiveMode)
-                        ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
-                        : Kirigami.Theme.alternateBackgroundColor
+                        ? Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.16)
+                        : CachyPalette.cardBackground
                     border.width: 1
                     border.color: (Plasmoid.dndActive && !root.hasActiveMode)
-                        ? Kirigami.Theme.highlightColor
-                        : Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.backgroundColor, Kirigami.Theme.textColor, 0.14)
+                        ? root.accent
+                        : CachyPalette.specularBorder
 
                     ColumnLayout {
                         id: footerCol
                         anchors.fill: parent
-                        anchors.margins: Kirigami.Units.mediumSpacing
-                        spacing: Kirigami.Units.smallSpacing
+                        anchors.margins: CachyTheme.spacingMedium
+                        spacing: CachyTheme.spacingSmall
 
                         RowLayout {
                             Layout.fillWidth: true
-                            spacing: Kirigami.Units.mediumSpacing
+                            spacing: CachyTheme.spacingMedium
 
                             Kirigami.Icon {
                                 Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
@@ -422,7 +434,7 @@ PlasmoidItem {
                                 source: Plasmoid.dndActive
                                     ? "notifications-disabled"
                                     : "preferences-desktop-notification-bell"
-                                color: Plasmoid.dndActive ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
+                                color: Plasmoid.dndActive ? root.accent : root.dim
                             }
 
                             ColumnLayout {
@@ -434,7 +446,7 @@ PlasmoidItem {
                                     text: "No Molestar (DND)"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.72
                                     font.bold: true
-                                    color: Kirigami.Theme.textColor
+                                    color: root.foreground
                                 }
 
                                 QQC2.Label {
@@ -443,7 +455,7 @@ PlasmoidItem {
                                         ? "Notificaciones emergentes silenciadas"
                                         : "Notificaciones del sistema permitidas"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.58
-                                    color: Kirigami.Theme.disabledTextColor
+                                    color: root.dim
                                     elide: Text.ElideRight
                                 }
                             }
@@ -451,7 +463,7 @@ PlasmoidItem {
                             QQC2.Switch {
                                 checked: Plasmoid.dndActive
                                 onToggled: {
-                                    Plasmoid.setDndActive(checked);
+                                    Plasmoid.dndActive = checked;
                                 }
                             }
                         }
@@ -462,27 +474,28 @@ PlasmoidItem {
                             Layout.fillWidth: true
                             implicitHeight: Kirigami.Units.gridUnit * 1.85
                             Layout.preferredHeight: implicitHeight
-                            radius: Kirigami.Units.smallSpacing
-                            color: Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.16)
+                            radius: CachyTheme.spacingSmall
+                            color: Qt.rgba(root.accent.r, root.accent.g, root.accent.b, 0.16)
                             border.width: 1
-                            border.color: Kirigami.Theme.highlightColor
+                            border.color: root.accent
 
                             RowLayout {
                                 anchors.centerIn: parent
-                                spacing: Kirigami.Units.smallSpacing
+                                spacing: CachyTheme.spacingSmall
 
                                 Kirigami.Icon {
                                     Layout.preferredWidth: Kirigami.Units.iconSizes.small
                                     Layout.preferredHeight: Kirigami.Units.iconSizes.small
                                     source: "dialog-cancel"
-                                    color: Kirigami.Theme.highlightColor
+                                    isMask: true
+                                    color: root.accent
                                 }
 
                                 QQC2.Label {
                                     text: "Desactivar Concentración"
                                     font.pixelSize: Kirigami.Units.gridUnit * 0.68
                                     font.bold: true
-                                    color: Kirigami.Theme.highlightColor
+                                    color: root.accent
                                 }
                             }
 
