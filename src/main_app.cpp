@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     app.setApplicationName(QStringLiteral("kfocus"));
     app.setApplicationDisplayName(QStringLiteral("Focus — Modos de Concentración"));
     app.setOrganizationDomain(QStringLiteral("cesar.org"));
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("focus-symbolic"), QIcon::fromTheme(QStringLiteral("preferences-system-time"))));
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("org.cesar.kfocus"), QIcon::fromTheme(QStringLiteral("preferences-system-time"))));
 
     QCommandLineParser parser;
     parser.addHelpOption();
