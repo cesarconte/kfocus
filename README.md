@@ -1,6 +1,6 @@
 # KFocus — Modos de Concentración (macOS Focus Modes) para KDE Plasma 6
 
-**KFocus** (`org.cesar.kfocus`) es un applet nativo de **KDE Plasma 6.8 + Wayland** con estética **Liquid Glass** que replica los **Modos de Concentración (Focus Modes)** del Centro de Control de macOS (*Trabajo*, *Personal*, *Lectura*, *Descanso*), integrándose con el sistema de notificaciones de KDE Plasma, los esquemas de color y otros componentes del ecosistema (`kisland`, `kiri`).
+**KFocus** (`org.cesar.kfocus`) es un applet nativo de **KDE Plasma 6.8 + Wayland** con estética **Liquid Glass** que replica los **Modos de Concentración (Focus Modes)** del Centro de Control de macOS (*Trabajo*, *Personal*, *Lectura*, *Descanso*), integrándose con el sistema de notificaciones de KDE Plasma, los esquemas de color y otros componentes del ecosistema (`kisland`, `kity`).
 
 ---
 
@@ -17,7 +17,7 @@
   - Invoca `org.freedesktop.Notifications.Inhibit` por D-Bus manteniendo la cookie de inhibición activa y sincroniza `plasmanotificationsrc` (`DoNotDisturb` -> `Until`).
 - **Temporizador de Concentración / Pomodoro integrado**:
   - Píldoras rápidas (`15m`, `25m`, `45m`, `60m`, `∞`) con cuenta atrás en vivo en el panel y notificación de escritorio al concluir la sesión.
-- **Estado compartido para KIsland y Kiri (`~/.config/kfocus/active_mode.json` y D-Bus `org.cesar.kfocus`)**:
+- **Estado compartido para KIsland y Kity (`~/.config/kfocus/active_mode.json` y D-Bus `org.cesar.kfocus`)**:
   - Expone el modo activo, icono, estado DND y tiempo restante tanto en disco como en el bus de sesión D-Bus (`/KFocus`).
 
 ---
