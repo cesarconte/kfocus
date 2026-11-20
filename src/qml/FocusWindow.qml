@@ -282,6 +282,8 @@ CachyWindow {
                                 id: durPill
                                 required property var modelData
                                 Layout.fillWidth: true
+                                Layout.preferredWidth: pillText.implicitWidth + 28
+                                Layout.minimumWidth: pillText.implicitWidth + 24
                                 height: 32
                                 radius: 16
 
@@ -297,7 +299,10 @@ CachyWindow {
                                 border.color: isSelectedDuration ? CachyTheme.accentColor : CachyPalette.specularBorder
 
                                 Text {
+                                    id: pillText
                                     anchors.centerIn: parent
+                                    width: Math.min(implicitWidth, parent.width - 24)
+                                    horizontalAlignment: Text.AlignHCenter
                                     text: durPill.modelData.label
                                     font.pixelSize: 11
                                     font.weight: durPill.isSelectedDuration ? Font.Bold : Font.Medium
