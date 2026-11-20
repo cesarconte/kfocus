@@ -56,6 +56,8 @@ target_link_libraries(kfocus PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+    KF6::I18n
+    KF6::I18nQml
 )
 install(TARGETS kfocus ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES org.cesar.kfocus.desktop DESTINATION ${KDE_INSTALL_APPDIR})

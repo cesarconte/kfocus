@@ -5,6 +5,7 @@
 
 #include "focuscontroller.h"
 
+#include <KLocalizedQmlContext>
 #include <QCommandLineParser>
 #include <QGuiApplication>
 #include <QIcon>
@@ -32,7 +33,8 @@ int main(int argc, char *argv[])
     FocusController controller;
 
     QQmlApplicationEngine engine;
-    engine.addImportPath(QStringLiteral("/home/cesar/.local/lib/qt6/qml"));
+    engine.addImportPath(QStringLiteral("/usr/lib/qt6/qml"));
+    KLocalization::setupLocalizedContext(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("FocusCtrl"), &controller);
     engine.load(QUrl(QStringLiteral("qrc:/org/cesar/kfocus/qml/FocusWindow.qml")));
 

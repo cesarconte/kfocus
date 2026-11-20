@@ -1,14 +1,13 @@
 /*
-    SPDX-FileCopyrightText: 2026 Cesar
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
+ * SPDX-FileCopyrightText: 2026 Cesar
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
-import org.kde.kirigami as Kirigami
 import CachyOS.UI
 
 CachyWindow {
@@ -40,12 +39,12 @@ CachyWindow {
         return CachyTheme.accentColor;
     }
 
-    function modeGlyph(modeId: string): string {
-        if (modeId === "work") return "💼";
-        if (modeId === "personal") return "👤";
-        if (modeId === "reading") return "📖";
-        if (modeId === "sleep") return "🌙";
-        return "🎯";
+    function modeIcon(modeId: string): string {
+        if (modeId === "work") return "applications-office";
+        if (modeId === "personal") return "user-identity";
+        if (modeId === "reading") return "accessories-dictionary";
+        if (modeId === "sleep") return "weather-clear-night";
+        return "weather-clear-night";
     }
 
     // =========================================================================
@@ -62,7 +61,7 @@ CachyWindow {
             Text {
                 Layout.leftMargin: 8
                 Layout.bottomMargin: 4
-                text: "Focus Modes"
+                text: i18n("Modos de Concentración")
                 font.pixelSize: 11
                 font.weight: Font.DemiBold
                 color: CachyTheme.textMuted
@@ -75,7 +74,7 @@ CachyWindow {
                     required property var modelData
                     Layout.fillWidth: true
                     text: modelData.name || ""
-                    iconGlyph: root.modeGlyph(modelData.id || "")
+                    iconName: root.modeIcon(modelData.id || "")
                     iconColor: root.modeColor(modelData.id || "")
                     squircleIconBadge: true
                     badgeText: (root.ctrl && root.ctrl.activeModeId === modelData.id) ? "ON" : ""
@@ -94,10 +93,10 @@ CachyWindow {
             Rectangle {
                 Layout.fillWidth: true
                 implicitHeight: dndSidebarRow.implicitHeight + 18
-                radius: 12
+                radius: CachyTheme.radiusMedium
                 color: CachyTheme.cardBackground
                 border.width: 1
-                border.color: (root.ctrl && root.ctrl.dndActive) ? "#AF52DE" : CachyTheme.specularBorder
+                border.color: (root.ctrl && root.ctrl.dndActive) ? "#AF52DE" : CachyPalette.specularBorder
 
                 RowLayout {
                     id: dndSidebarRow
@@ -105,9 +104,18 @@ CachyWindow {
                     anchors.margins: 9
                     spacing: 8
 
-                    Text {
-                        text: "🌙"
-                        font.pixelSize: 15
+                    Rectangle {
+                        Layout.preferredWidth: 24
+                        Layout.preferredHeight: 24
+                        radius: 6
+                        color: "#AF52DE"
+
+                        CachyIcon {
+                            anchors.centerIn: parent
+                            name: "weather-clear-night"
+                            size: 14
+                            color: "#FFFFFF"
+                        }
                     }
 
                     ColumnLayout {
@@ -116,7 +124,7 @@ CachyWindow {
 
                         Text {
                             Layout.fillWidth: true
-                            text: "No Molestar"
+                            text: i18n("No Molestar")
                             font.pixelSize: 12
                             font.weight: Font.Bold
                             color: CachyTheme.textPrimary
@@ -125,14 +133,14 @@ CachyWindow {
 
                         Text {
                             Layout.fillWidth: true
-                            text: (root.ctrl && root.ctrl.dndActive) ? "Silenciado" : "Inactivo"
+                            text: (root.ctrl && root.ctrl.dndActive) ? i18n("Silenciado") : i18n("Inactivo")
                             font.pixelSize: 10
                             color: (root.ctrl && root.ctrl.dndActive) ? "#AF52DE" : CachyTheme.textMuted
                             elide: Text.ElideRight
                         }
                     }
 
-                    QQC2.Switch {
+                    CachySwitch {
                         checked: Boolean(root.ctrl && root.ctrl.dndActive)
                         onToggled: {
                             if (root.ctrl) {
@@ -155,9 +163,9 @@ CachyWindow {
 
             CachyToolbarButton {
                 visible: root.hasActiveMode
-                text: "Desactivar"
+                text: i18n("Desactivar")
                 implicitWidth: 84
-                tooltipText: "Desactivar modo de concentración actual"
+                tooltipText: i18n("Desactivar modo de concentración actual")
                 onClicked: {
                     if (root.ctrl) {
                         root.ctrl.deactivateMode();
@@ -183,7 +191,7 @@ CachyWindow {
                 radius: 16
                 color: CachyTheme.cardBackground
                 border.width: 1
-                border.color: root.hasActiveMode ? CachyTheme.accentColor : CachyTheme.specularBorder
+                border.color: root.hasActiveMode ? CachyTheme.accentColor : CachyPalette.specularBorder
 
                 ColumnLayout {
                     id: topFocusCol
@@ -201,10 +209,11 @@ CachyWindow {
                             radius: 12
                             color: root.hasActiveMode ? root.modeColor(root.ctrl.activeModeId) : CachyTheme.surfacePill
 
-                            Text {
+                            CachyIcon {
                                 anchors.centerIn: parent
-                                text: root.hasActiveMode ? root.modeGlyph(root.ctrl.activeModeId) : "🎯"
-                                font.pixelSize: 20
+                                name: root.hasActiveMode ? root.modeIcon(root.ctrl.activeModeId) : "weather-clear-night"
+                                size: 22
+                                color: root.hasActiveMode ? "#FFFFFF" : CachyTheme.textPrimary
                             }
                         }
 
@@ -215,8 +224,8 @@ CachyWindow {
                             Text {
                                 Layout.fillWidth: true
                                 text: root.hasActiveMode
-                                    ? ("Modo " + root.ctrl.activeModeName + " activo")
-                                    : ((root.ctrl && root.ctrl.dndActive) ? "No Molestar activo" : "Modos de Concentración")
+                                    ? i18n("Modo %1 activo", root.ctrl.activeModeName)
+                                    : ((root.ctrl && root.ctrl.dndActive) ? i18n("No Molestar activo") : i18n("Modos de Concentración"))
                                 font.pixelSize: 16
                                 font.weight: Font.Bold
                                 color: CachyTheme.textPrimary
@@ -226,8 +235,8 @@ CachyWindow {
                             Text {
                                 Layout.fillWidth: true
                                 text: root.hasActiveTimer
-                                    ? ("Finaliza en " + root.ctrl.remainingFormatted)
-                                    : (root.hasActiveMode ? "Sin temporizador límite" : "Silencia notificaciones y personaliza tu sesión en KDE Plasma 6")
+                                    ? i18n("Finaliza en %1", root.ctrl.remainingFormatted)
+                                    : (root.hasActiveMode ? i18n("Sin temporizador límite") : i18n("Silencia notificaciones y personaliza tu sesión en KDE Plasma 6"))
                                 font.pixelSize: 12
                                 color: root.hasActiveTimer ? CachyTheme.accentColor : CachyTheme.textSecondary
                                 elide: Text.ElideRight
@@ -255,7 +264,7 @@ CachyWindow {
                         }
                     }
 
-                    // Quick Duration Pills: 15m, 25m, 45m, 60m, ∞
+                    // Quick Duration Pills: 15m, 25m, 45m, 60m, Sin límite
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: 8
@@ -266,7 +275,7 @@ CachyWindow {
                                 { label: "25m (Pomodoro)", minutes: 25 },
                                 { label: "45m", minutes: 45 },
                                 { label: "60m", minutes: 60 },
-                                { label: "∞ Sin límite", minutes: 0 }
+                                { label: i18n("Sin límite"), minutes: 0 }
                             ]
 
                             Rectangle {
@@ -285,7 +294,7 @@ CachyWindow {
 
                                 color: isSelectedDuration ? CachyTheme.accentColor : CachyTheme.surfacePill
                                 border.width: 1
-                                border.color: isSelectedDuration ? CachyTheme.accentColor : CachyTheme.specularBorder
+                                border.color: isSelectedDuration ? CachyTheme.accentColor : CachyPalette.specularBorder
 
                                 Text {
                                     anchors.centerIn: parent
@@ -294,6 +303,10 @@ CachyWindow {
                                     font.weight: durPill.isSelectedDuration ? Font.Bold : Font.Medium
                                     color: durPill.isSelectedDuration ? "#FFFFFF" : CachyTheme.textPrimary
                                     elide: Text.ElideRight
+                                }
+
+                                HoverHandler {
+                                    cursorShape: Qt.PointingHandCursor
                                 }
 
                                 TapHandler {
@@ -336,7 +349,7 @@ CachyWindow {
                             ? CachyTheme.withAlpha(root.modeColor(modeId), CachyTheme.isDark ? 0.24 : 0.14)
                             : CachyTheme.cardBackground
                         border.width: isCurrent ? 1.5 : 1
-                        border.color: isCurrent ? root.modeColor(modeId) : CachyTheme.specularBorder
+                        border.color: isCurrent ? root.modeColor(modeId) : CachyPalette.specularBorder
 
                         HoverHandler { cursorShape: Qt.PointingHandCursor }
                         TapHandler {
@@ -362,10 +375,11 @@ CachyWindow {
                                     radius: 10
                                     color: root.modeColor(modeCard.modeId)
 
-                                    Text {
+                                    CachyIcon {
                                         anchors.centerIn: parent
-                                        text: root.modeGlyph(modeCard.modeId)
-                                        font.pixelSize: 17
+                                        name: root.modeIcon(modeCard.modeId)
+                                        size: 20
+                                        color: "#FFFFFF"
                                     }
                                 }
 
@@ -385,8 +399,8 @@ CachyWindow {
                                     Text {
                                         Layout.fillWidth: true
                                         text: (modeCard.modelData.defaultTimerMinutes || 0) > 0
-                                            ? (modeCard.modelData.defaultTimerMinutes + " min por defecto")
-                                            : "Activación manual"
+                                            ? i18n("%1 min por defecto", modeCard.modelData.defaultTimerMinutes)
+                                            : i18n("Activación manual")
                                         font.pixelSize: 11
                                         color: CachyTheme.textMuted
                                         elide: Text.ElideRight
@@ -402,7 +416,7 @@ CachyWindow {
                                     Text {
                                         id: stateLbl
                                         anchors.centerIn: parent
-                                        text: modeCard.isCurrent ? "ACTIVO" : "Activar"
+                                        text: modeCard.isCurrent ? i18n("ACTIVO") : i18n("Activar")
                                         font.pixelSize: 10
                                         font.weight: Font.Bold
                                         color: modeCard.isCurrent ? "#FFFFFF" : CachyTheme.textSecondary
